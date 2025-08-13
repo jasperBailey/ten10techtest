@@ -1,4 +1,5 @@
 import type { Page } from "@playwright/test";
+import type { InterestPeriod } from "../types/interest-period.types.js";
 
 export function principalAmount(page: Page) {
 	return page.locator(".custom-range");
@@ -16,7 +17,7 @@ export function consentButton(page: Page) {
 	return page.locator("#gridCheck1");
 }
 
-export function submit(page: Page) {
+export function submitButton(page: Page) {
 	return page.locator("button.btn-primary");
 }
 
@@ -33,4 +34,11 @@ export function interestRateButton(page: Page, rate: number) {
 		throw new Error("interest rate must be integer between 0 and 15");
 	}
 	return page.locator(`#rate-${rate.toString()}\\%`);
+}
+
+export function interestPeriodButton(
+	page: Page,
+	interestPeriod: InterestPeriod
+) {
+	return page.locator(`#durationList a[data-value="${interestPeriod}"]`);
 }

@@ -4,11 +4,12 @@ import {
 	interestRateDropdown,
 	activeInterestPeriod,
 	consentButton,
-	submit,
+	submitButton,
 	interestAmount,
 	totalAmount,
 	interestRateButton,
 } from "../src/locators/interest-calc-locators.js";
+import { fillForm } from "../src/util/fill-form.js";
 
 test.describe("Interest Calculator Tests", () => {
 	test("should load the interest calculator main page", async ({ page }) => {
@@ -41,7 +42,7 @@ test.describe("Interest Calculator Tests", () => {
 			});
 
 			// ACT
-			await submit(page).click();
+			await submitButton(page).click();
 
 			// ASSERT
 			expect(dialogMessage).toBe("Please fill in all fields.");
@@ -51,13 +52,15 @@ test.describe("Interest Calculator Tests", () => {
 			// ARRANGE
 			await page.goto("/");
 
-			await principalAmount(page).fill("5000");
-			await interestRateDropdown(page).click();
-			await interestRateButton(page, 5).check();
-			await page.locator("body").click();
+			await fillForm(page, {
+				principalAmount: 5000,
+				interestRate: 5,
+				interestPeriod: "Daily",
+				consent: false,
+			});
 
 			// ACT
-			await submit(page).click();
+			await submitButton(page).click();
 
 			// ASSERT
 			await expect(interestAmount(page)).toHaveText("");
@@ -70,20 +73,15 @@ test.describe("Interest Calculator Tests", () => {
 			// ARRANGE
 			await page.goto("/");
 
-			await principalAmount(page).fill("5000");
-
-			await interestRateDropdown(page).click();
-			await interestRateButton(page, 5).check();
-
-			await expect(activeInterestPeriod(page)).toHaveAttribute(
-				"data-value",
-				"Daily"
-			);
-
-			await consentButton(page).check();
+			await fillForm(page, {
+				principalAmount: 5000,
+				interestRate: 5,
+				interestPeriod: "Daily",
+				consent: true,
+			});
 
 			// ACT
-			await submit(page).click();
+			await submitButton(page).click();
 
 			// ASSERT
 			await expect(interestAmount(page)).toContainText("0.68");
@@ -96,19 +94,15 @@ test.describe("Interest Calculator Tests", () => {
 			//ARRANGE
 			await page.goto("/");
 
-			await principalAmount(page).fill("10000");
-
-			await interestRateDropdown(page).click();
-			await interestRateButton(page, 10).check();
-
-			await page.locator("body").click();
-
-			await page.locator('#durationList a[data-value="Monthly"]').click();
-
-			await consentButton(page).check();
+			await fillForm(page, {
+				principalAmount: 10000,
+				interestRate: 10,
+				interestPeriod: "Monthly",
+				consent: true,
+			});
 
 			// ACT
-			await submit(page).click();
+			await submitButton(page).click();
 
 			// ASSERT
 			await expect(interestAmount(page)).toContainText("83.33");
@@ -119,18 +113,15 @@ test.describe("Interest Calculator Tests", () => {
 			//ARRANGE
 			await page.goto("/");
 
-			await principalAmount(page).fill("15000");
-
-			await interestRateDropdown(page).click();
-			await interestRateButton(page, 15).check();
-			await page.locator("body").click();
-
-			await page.locator('#durationList a[data-value="Yearly"]').click();
-
-			await consentButton(page).check();
+			await fillForm(page, {
+				principalAmount: 15000,
+				interestRate: 15,
+				interestPeriod: "Yearly",
+				consent: true,
+			});
 
 			//ACT
-			await submit(page).click();
+			await submitButton(page).click();
 
 			//ASSERT
 			await expect(interestAmount(page)).toContainText("2250.00");
@@ -147,21 +138,15 @@ test.describe("Interest Calculator Tests", () => {
 
 				await page.goto("/");
 
-				await principalAmount(page).fill("1000");
-
-				await page
-					.locator('#durationList a[data-value="Yearly"]')
-					.click();
-
-				await consentButton(page).check();
-
-				await interestRateDropdown(page).click();
-				await interestRateButton(page, rate).check();
-
-				await page.locator("body").click();
+				await fillForm(page, {
+					principalAmount: 1000,
+					interestRate: rate,
+					interestPeriod: "Yearly",
+					consent: true,
+				});
 
 				// ACT
-				await submit(page).click();
+				await submitButton(page).click();
 
 				// ASSERT
 				await expect(interestAmount(page)).toContainText(
@@ -188,7 +173,7 @@ test.describe("Interest Calculator Tests", () => {
 			await expect(interestRateDropdown(page)).toBeVisible();
 			await expect(page.locator("#durationList")).toBeVisible();
 			await expect(consentButton(page)).toBeVisible();
-			await expect(submit(page)).toBeVisible();
+			await expect(submitButton(page)).toBeVisible();
 		});
 
 		test("should be responsive on tablet", async ({ page }) => {
@@ -205,7 +190,7 @@ test.describe("Interest Calculator Tests", () => {
 			await expect(interestRateDropdown(page)).toBeVisible();
 			await expect(page.locator("#durationList")).toBeVisible();
 			await expect(consentButton(page)).toBeVisible();
-			await expect(submit(page)).toBeVisible();
+			await expect(submitButton(page)).toBeVisible();
 		});
 
 		test("should be responsive on desktop", async ({ page }) => {
@@ -222,7 +207,7 @@ test.describe("Interest Calculator Tests", () => {
 			await expect(interestRateDropdown(page)).toBeVisible();
 			await expect(page.locator("#durationList")).toBeVisible();
 			await expect(consentButton(page)).toBeVisible();
-			await expect(submit(page)).toBeVisible();
+			await expect(submitButton(page)).toBeVisible();
 		});
 	});
 });
