@@ -1,4 +1,14 @@
 import { test, expect } from "@playwright/test";
+import {
+	principalAmount,
+	interestRateDropdown,
+	activeInterestPeriod,
+	consentButton,
+	submit,
+	interestAmount,
+	totalAmount,
+	interestRateButton,
+} from "../src/locators/interest-calc-locators.js";
 
 test.describe("Interest Calculator Tests", () => {
 	test("should load the interest calculator main page", async ({ page }) => {
@@ -28,7 +38,7 @@ test.describe("Interest Calculator Tests", () => {
 			});
 
 			// ACT
-			await page.locator("button.btn-primary").click();
+			await submit(page).click();
 
 			// ASSERT
 			expect(dialogMessage).toBe("Please fill in all fields.");
@@ -38,17 +48,17 @@ test.describe("Interest Calculator Tests", () => {
 			// ARRANGE
 			await page.goto("/");
 
-			await page.locator(".custom-range").fill("5000");
-			await page.locator("#dropdownMenuButton").click();
-			await page.locator("#rate-5\\%").check();
+			await principalAmount(page).fill("5000");
+			await interestRateDropdown(page).click();
+			await interestRateButton(page, 5);
 			await page.locator("body").click();
 
 			// ACT
-			await page.locator("button.btn-primary").click();
+			await submit(page).click();
 
 			// ASSERT
-			await expect(page.locator("#interestAmount")).toHaveText("");
-			await expect(page.locator("#totalAmount")).toHaveText("");
+			await expect(interestAmount(page)).toHaveText("");
+			await expect(totalAmount(page)).toHaveText("");
 		});
 	});
 
@@ -57,23 +67,24 @@ test.describe("Interest Calculator Tests", () => {
 			// ARRANGE
 			await page.goto("/");
 
-			await page.locator(".custom-range").fill("5000");
+			await principalAmount(page).fill("5000");
 
-			await page.locator("#dropdownMenuButton").click();
-			await page.locator("#rate-5\\%").check();
+			await interestRateDropdown(page).click();
+			await interestRateButton(page, 5);
 
-			await expect(
-				page.locator("#durationList a.active")
-			).toHaveAttribute("data-value", "Daily");
+			await expect(activeInterestPeriod(page)).toHaveAttribute(
+				"data-value",
+				"Daily"
+			);
 
-			await page.locator("#gridCheck1").check();
+			await consentButton(page).check();
 
 			// ACT
-			await page.locator("button.btn-primary").click();
+			await submit(page).click();
 
 			// ASSERT
-			await expect(page.locator("#interestAmount")).toContainText("0.68");
-			await expect(page.locator("#totalAmount")).toContainText("5000.68");
+			await expect(interestAmount(page)).toContainText("0.68");
+			await expect(totalAmount(page)).toContainText("5000.68");
 		});
 
 		test("should calculate monthly interest correctly", async ({
@@ -82,53 +93,45 @@ test.describe("Interest Calculator Tests", () => {
 			//ARRANGE
 			await page.goto("/");
 
-			await page.locator(".custom-range").fill("10000");
+			await principalAmount(page).fill("10000");
 
-			await page.locator("#dropdownMenuButton").click();
-			await page.locator("#rate-10\\%").check();
+			await interestRateDropdown(page).click();
+			await interestRateButton(page, 10);
 
 			await page.locator("body").click();
 
 			await page.locator('#durationList a[data-value="Monthly"]').click();
 
-			await page.locator("#gridCheck1").check();
+			await consentButton(page).check();
 
 			// ACT
-			await page.locator("button.btn-primary").click();
+			await submit(page).click();
 
 			// ASSERT
-			await expect(page.locator("#interestAmount")).toContainText(
-				"83.33"
-			);
-			await expect(page.locator("#totalAmount")).toContainText(
-				"10083.33"
-			);
+			await expect(interestAmount(page)).toContainText("83.33");
+			await expect(totalAmount(page)).toContainText("10083.33");
 		});
 
 		test("should calculate yearly interest correctly", async ({ page }) => {
 			//ARRANGE
 			await page.goto("/");
 
-			await page.locator(".custom-range").fill("15000");
+			await principalAmount(page).fill("15000");
 
-			await page.locator("#dropdownMenuButton").click();
-			await page.locator("#rate-15\\%").check();
+			await interestRateDropdown(page).click();
+			await interestRateButton(page, 15);
 			await page.locator("body").click();
 
 			await page.locator('#durationList a[data-value="Yearly"]').click();
 
-			await page.locator("#gridCheck1").check();
+			await consentButton(page).check();
 
 			//ACT
-			await page.locator("button.btn-primary").click();
+			await submit(page).click();
 
 			//ASSERT
-			await expect(page.locator("#interestAmount")).toContainText(
-				"2250.00"
-			);
-			await expect(page.locator("#totalAmount")).toContainText(
-				"17250.00"
-			);
+			await expect(interestAmount(page)).toContainText("2250.00");
+			await expect(totalAmount(page)).toContainText("17250.00");
 		});
 
 		const rates = [1, 5, 10, 15];
@@ -138,30 +141,28 @@ test.describe("Interest Calculator Tests", () => {
 			}) => {
 				await page.goto("/");
 
-				await page.locator(".custom-range").fill("1000");
+				await principalAmount(page).fill("1000");
 
 				await page
 					.locator('#durationList a[data-value="Yearly"]')
 					.click();
 
-				await page.locator("#gridCheck1").check();
+				await consentButton(page).check();
 
-				await page.locator("#dropdownMenuButton").click();
-				await page.locator(`#rate-${rate}\\%`).check();
+				await interestRateDropdown(page).click();
+				await interestRateButton(page, rate);
 
 				await page.locator("body").click();
 
-				await page.locator("button.btn-primary").click();
+				await submit(page).click();
 
 				const expectedInterest = (1000 * (rate / 100)).toFixed(2);
 				const expectedTotal = (1000 + 1000 * (rate / 100)).toFixed(2);
 
-				await expect(page.locator("#interestAmount")).toContainText(
+				await expect(interestAmount(page)).toContainText(
 					expectedInterest
 				);
-				await expect(page.locator("#totalAmount")).toContainText(
-					expectedTotal
-				);
+				await expect(totalAmount(page)).toContainText(expectedTotal);
 			});
 		});
 	});
@@ -178,11 +179,11 @@ test.describe("Interest Calculator Tests", () => {
 			await expect(
 				page.locator('h1:has-text("Interest Calculator")')
 			).toBeVisible();
-			await expect(page.locator(".custom-range")).toBeVisible();
-			await expect(page.locator("#dropdownMenuButton")).toBeVisible();
+			await expect(principalAmount(page)).toBeVisible();
+			await expect(interestRateDropdown(page)).toBeVisible();
 			await expect(page.locator("#durationList")).toBeVisible();
-			await expect(page.locator("#gridCheck1")).toBeVisible();
-			await expect(page.locator("button.btn-primary")).toBeVisible();
+			await expect(consentButton(page)).toBeVisible();
+			await expect(submit(page)).toBeVisible();
 		});
 
 		test("should be responsive on tablet", async ({ page }) => {
@@ -195,11 +196,11 @@ test.describe("Interest Calculator Tests", () => {
 			await expect(
 				page.locator('h1:has-text("Interest Calculator")')
 			).toBeVisible();
-			await expect(page.locator(".custom-range")).toBeVisible();
-			await expect(page.locator("#dropdownMenuButton")).toBeVisible();
+			await expect(principalAmount(page)).toBeVisible();
+			await expect(interestRateDropdown(page)).toBeVisible();
 			await expect(page.locator("#durationList")).toBeVisible();
-			await expect(page.locator("#gridCheck1")).toBeVisible();
-			await expect(page.locator("button.btn-primary")).toBeVisible();
+			await expect(consentButton(page)).toBeVisible();
+			await expect(submit(page)).toBeVisible();
 		});
 
 		test("should be responsive on desktop", async ({ page }) => {
@@ -212,11 +213,11 @@ test.describe("Interest Calculator Tests", () => {
 			await expect(
 				page.locator('h1:has-text("Interest Calculator")')
 			).toBeVisible();
-			await expect(page.locator(".custom-range")).toBeVisible();
-			await expect(page.locator("#dropdownMenuButton")).toBeVisible();
+			await expect(principalAmount(page)).toBeVisible();
+			await expect(interestRateDropdown(page)).toBeVisible();
 			await expect(page.locator("#durationList")).toBeVisible();
-			await expect(page.locator("#gridCheck1")).toBeVisible();
-			await expect(page.locator("button.btn-primary")).toBeVisible();
+			await expect(consentButton(page)).toBeVisible();
+			await expect(submit(page)).toBeVisible();
 		});
 	});
 });
