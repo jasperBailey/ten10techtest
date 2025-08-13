@@ -75,4 +75,27 @@ test.describe("Interest Calculator Tests", () => {
 		await expect(page.locator("#interestAmount")).toContainText("0.68");
 		await expect(page.locator("#totalAmount")).toContainText("5000.68");
 	});
+
+	test("should calculate monthly interest correctly", async ({ page }) => {
+		//ARRANGE
+		await page.goto("/");
+
+		await page.locator(".custom-range").fill("10000");
+
+		await page.locator("#dropdownMenuButton").click();
+		await page.locator("#rate-10\\%").check();
+
+		await page.locator("body").click();
+
+		await page.locator('#durationList a[data-value="Monthly"]').click();
+
+		await page.locator("#gridCheck1").check();
+
+		// ACT
+		await page.locator("button.btn-primary").click();
+
+		// ASSERT
+		await expect(page.locator("#interestAmount")).toContainText("83.33");
+		await expect(page.locator("#totalAmount")).toContainText("10083.33");
+	});
 });
