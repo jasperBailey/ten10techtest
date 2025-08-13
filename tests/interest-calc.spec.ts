@@ -50,7 +50,7 @@ test.describe("Interest Calculator Tests", () => {
 
 			await principalAmount(page).fill("5000");
 			await interestRateDropdown(page).click();
-			await interestRateButton(page, 5);
+			await interestRateButton(page, 5).check();
 			await page.locator("body").click();
 
 			// ACT
@@ -70,7 +70,7 @@ test.describe("Interest Calculator Tests", () => {
 			await principalAmount(page).fill("5000");
 
 			await interestRateDropdown(page).click();
-			await interestRateButton(page, 5);
+			await interestRateButton(page, 5).check();
 
 			await expect(activeInterestPeriod(page)).toHaveAttribute(
 				"data-value",
@@ -96,7 +96,7 @@ test.describe("Interest Calculator Tests", () => {
 			await principalAmount(page).fill("10000");
 
 			await interestRateDropdown(page).click();
-			await interestRateButton(page, 10);
+			await interestRateButton(page, 10).check();
 
 			await page.locator("body").click();
 
@@ -119,7 +119,7 @@ test.describe("Interest Calculator Tests", () => {
 			await principalAmount(page).fill("15000");
 
 			await interestRateDropdown(page).click();
-			await interestRateButton(page, 15);
+			await interestRateButton(page, 15).check();
 			await page.locator("body").click();
 
 			await page.locator('#durationList a[data-value="Yearly"]').click();
@@ -153,7 +153,7 @@ test.describe("Interest Calculator Tests", () => {
 				await consentButton(page).check();
 
 				await interestRateDropdown(page).click();
-				await interestRateButton(page, rate);
+				await interestRateButton(page, rate).check();
 
 				await page.locator("body").click();
 
