@@ -120,4 +120,21 @@ test.describe("Interest Calculator Tests", () => {
 		await expect(page.locator("#interestAmount")).toContainText("2250.00");
 		await expect(page.locator("#totalAmount")).toContainText("17250.00");
 	});
+
+	test("should require consent checkbox", async ({ page }) => {
+		// ARRANGE
+		await page.goto("/");
+
+		await page.locator(".custom-range").fill("5000");
+		await page.locator("#dropdownMenuButton").click();
+		await page.locator("#rate-5\\%").check();
+		await page.locator("body").click();
+
+		// ACT
+		await page.locator("button.btn-primary").click();
+
+		// ASSERT
+		await expect(page.locator("#interestAmount")).toHaveText("");
+		await expect(page.locator("#totalAmount")).toHaveText("");
+	});
 });
