@@ -130,6 +130,40 @@ test.describe("Interest Calculator Tests", () => {
 				"17250.00"
 			);
 		});
+
+		const rates = [1, 5, 10, 15];
+		rates.forEach((rate) => {
+			test(`should handle different interest rates: ${rate}`, async ({
+				page,
+			}) => {
+				await page.goto("/");
+
+				await page.locator(".custom-range").fill("1000");
+
+				await page
+					.locator('#durationList a[data-value="Yearly"]')
+					.click();
+
+				await page.locator("#gridCheck1").check();
+
+				await page.locator("#dropdownMenuButton").click();
+				await page.locator(`#rate-${rate}\\%`).check();
+
+				await page.locator("body").click();
+
+				await page.locator("button.btn-primary").click();
+
+				const expectedInterest = (1000 * (rate / 100)).toFixed(2);
+				const expectedTotal = (1000 + 1000 * (rate / 100)).toFixed(2);
+
+				await expect(page.locator("#interestAmount")).toContainText(
+					expectedInterest
+				);
+				await expect(page.locator("#totalAmount")).toContainText(
+					expectedTotal
+				);
+			});
+		});
 	});
 
 	test.describe("responsive layout", () => {
