@@ -134,8 +134,7 @@ test.describe("Interest Calculator Tests", () => {
 			await expect(totalAmount(page)).toContainText("17250.00");
 		});
 
-		const rates = [1, 5, 10, 15];
-		rates.forEach((rate) => {
+		for (let rate = 1; rate <= 15; rate++) {
 			test(`should handle different interest rates: ${rate}`, async ({
 				page,
 			}) => {
@@ -167,7 +166,7 @@ test.describe("Interest Calculator Tests", () => {
 				);
 				await expect(totalAmount(page)).toContainText(expectedTotal);
 			});
-		});
+		}
 	});
 
 	test.describe("responsive layout", () => {
