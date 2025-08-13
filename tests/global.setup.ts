@@ -17,14 +17,11 @@ test("global setup", async ({ browser }) => {
 		fs.mkdirSync(authDir, { recursive: true });
 	}
 
+	// test site doesn't use https >:(
 	const context = await browser.newContext({ ignoreHTTPSErrors: true });
 	const page = await context.newPage();
 
-	await page.goto("/");
-
-	await expect(page).toHaveTitle(/Home Page - Ten10TechTest/i);
-
-	await page.getByRole("button", { name: "Login" }).click();
+	await page.goto("/Account/Login");
 	await expect(page).toHaveTitle(" - Ten10TechTest");
 
 	await page.locator("#UserName").fill(process.env.TEST_USER_EMAIL || "");
