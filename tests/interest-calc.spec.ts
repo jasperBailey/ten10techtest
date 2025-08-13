@@ -100,6 +100,7 @@ test.describe("Interest Calculator Tests", () => {
 	});
 
 	test("should calculate yearly interest correctly", async ({ page }) => {
+		//ARRANGE
 		await page.goto("/");
 
 		await page.locator(".custom-range").fill("15000");
@@ -112,6 +113,7 @@ test.describe("Interest Calculator Tests", () => {
 
 		await page.locator("#gridCheck1").check();
 
+		//ACT
 		await page.locator("button.btn-primary").click();
 
 		//ASSERT
