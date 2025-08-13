@@ -1,12 +1,11 @@
 import { test, expect } from "@playwright/test";
 
-test("should load the interest calculator login page", async ({ browser }) => {
-	const context = await browser.newContext({ ignoreHTTPSErrors: true });
-	const page = await context.newPage();
+test.describe("Interest Calculator Tests", () => {
+	test("should load the interest calculator main page", async ({ page }) => {
+		await page.goto("/");
 
-	await page.goto("/");
-
-	await expect(page).toHaveTitle(/Home Page - Ten10TechTest/i);
-
-	await context.close();
+		await expect(
+			page.locator('a[title="Manage"][href="/Account/Manage"]')
+		).toHaveText("Hello jasperbailey98@gmail.com!"); //TODO .env this
+	});
 });
