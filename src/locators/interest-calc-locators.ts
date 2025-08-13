@@ -32,5 +32,5 @@ export function interestRateButton(page: Page, rate: number) {
 	if (rate < 0 || rate > 15 || !Number.isInteger(rate)) {
 		throw new Error("interest rate must be integer between 0 and 15");
 	}
-	return page.locator(`#rate-${rate.toString()}\\%`).check();
+	return page.locator(`#rate-${rate.toString()}\\%`);
 }
