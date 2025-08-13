@@ -98,4 +98,24 @@ test.describe("Interest Calculator Tests", () => {
 		await expect(page.locator("#interestAmount")).toContainText("83.33");
 		await expect(page.locator("#totalAmount")).toContainText("10083.33");
 	});
+
+	test("should calculate yearly interest correctly", async ({ page }) => {
+		await page.goto("/");
+
+		await page.locator(".custom-range").fill("15000");
+
+		await page.locator("#dropdownMenuButton").click();
+		await page.locator("#rate-15\\%").check();
+		await page.locator("body").click();
+
+		await page.locator('#durationList a[data-value="Yearly"]').click();
+
+		await page.locator("#gridCheck1").check();
+
+		await page.locator("button.btn-primary").click();
+
+		//ASSERT
+		await expect(page.locator("#interestAmount")).toContainText("2250.00");
+		await expect(page.locator("#totalAmount")).toContainText("17250.00");
+	});
 });
