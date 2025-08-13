@@ -23,7 +23,7 @@ test.describe("Interest Calculator Tests", () => {
 
 		// ASSERT
 		await expect(manageLink).toContainText(
-			process.env.TEST_USER ??
+			process.env.TEST_USER_EMAIL ??
 				"I mean if there's nothing there in the env it shouldn't get to this point"
 		);
 	});
