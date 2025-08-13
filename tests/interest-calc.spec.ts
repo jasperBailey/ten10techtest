@@ -139,6 +139,10 @@ test.describe("Interest Calculator Tests", () => {
 			test(`should handle different interest rates: ${rate}`, async ({
 				page,
 			}) => {
+				// ARRANGE
+				const expectedInterest = (1000 * (rate / 100)).toFixed(2);
+				const expectedTotal = (1000 + 1000 * (rate / 100)).toFixed(2);
+
 				await page.goto("/");
 
 				await principalAmount(page).fill("1000");
@@ -154,11 +158,10 @@ test.describe("Interest Calculator Tests", () => {
 
 				await page.locator("body").click();
 
+				// ACT
 				await submit(page).click();
 
-				const expectedInterest = (1000 * (rate / 100)).toFixed(2);
-				const expectedTotal = (1000 + 1000 * (rate / 100)).toFixed(2);
-
+				// ASSERT
 				await expect(interestAmount(page)).toContainText(
 					expectedInterest
 				);
