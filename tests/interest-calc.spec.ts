@@ -51,4 +51,28 @@ test.describe("Interest Calculator Tests", () => {
 		// ASSERT
 		expect(dialogMessage).toBe("Please fill in all fields.");
 	});
+
+	test("should calculate daily interest correctly", async ({ page }) => {
+		// ARRANGE
+		await page.goto("/");
+
+		await page.locator(".custom-range").fill("5000");
+
+		await page.locator("#dropdownMenuButton").click();
+		await page.locator("#rate-5\\%").check();
+
+		await expect(page.locator("#durationList a.active")).toHaveAttribute(
+			"data-value",
+			"Daily"
+		);
+
+		await page.locator("#gridCheck1").check();
+
+		// ACT
+		await page.locator("button.btn-primary").click();
+
+		// ASSERT
+		await expect(page.locator("#interestAmount")).toContainText("0.68");
+		await expect(page.locator("#totalAmount")).toContainText("5000.68");
+	});
 });
