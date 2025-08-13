@@ -2,6 +2,9 @@ import { test, expect } from "@playwright/test";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,8 +27,8 @@ test("global setup", async ({ browser }) => {
 	await page.getByRole("button", { name: "Login" }).click();
 	await expect(page).toHaveTitle(" - Ten10TechTest");
 
-	await page.locator("#UserName").fill("jasperbailey98@gmail.com"); //TODO put in .env
-	await page.locator("#Password").fill("3Yue8CWz8eqGFam!"); //TODO put in .env
+	await page.locator("#UserName").fill(process.env.TEST_USER_EMAIL || "");
+	await page.locator("#Password").fill(process.env.TEST_USER_PASSWORD || "");
 	await page.locator("#RememberMe").click();
 	await page.locator("#login-submit").click();
 

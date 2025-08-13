@@ -12,6 +12,7 @@
 	"devDependencies": {
 		"@playwright/test": "^1.54.2",
 		"@types/node": "^20.8.9",
+		"dotenv": "^17.2.1",
 		"typescript": "^5.9.2"
 	},
 	"type": "module"
