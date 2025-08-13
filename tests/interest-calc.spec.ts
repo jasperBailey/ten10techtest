@@ -2,12 +2,10 @@ import { test, expect } from "@playwright/test";
 import {
 	principalAmount,
 	interestRateDropdown,
-	activeInterestPeriod,
 	consentButton,
 	submitButton,
 	interestAmount,
 	totalAmount,
-	interestRateButton,
 } from "../src/locators/interest-calc-locators.js";
 import { fillForm } from "../src/util/fill-form.js";
 
