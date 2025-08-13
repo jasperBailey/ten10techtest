@@ -21,7 +21,10 @@ test.describe("Interest Calculator Tests", () => {
 		);
 
 		// ASSERT
-		await expect(manageLink).toHaveText("Hello jasperbailey98@gmail.com!"); //TODO .env this
+		await expect(manageLink).toContainText(
+			process.env.TEST_USER ??
+				"I mean if there's nothing there in the env it shouldn't get to this point"
+		);
 	});
 
 	test.describe("missing fields", () => {
