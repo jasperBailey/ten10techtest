@@ -9,11 +9,13 @@ test("should load the interest calculator login page", async ({ browser }) => {
 	await expect(page).toHaveTitle(/Home Page - Ten10TechTest/i);
 
 	await page.getByRole("button", { name: "Login" }).click();
+	await expect(page).toHaveTitle(" - Ten10TechTest");
 
 	await page.locator("#UserName").fill("jasperbailey98@gmail.com");
 	await page.locator("#Password").fill("3Yue8CWz8eqGFam!");
 	await page.locator("#RememberMe").click();
 	await page.locator("#login-submit").click();
 
+	await expect(page).toHaveTitle("Home Page - Ten10TechTest");
 	await context.close();
 });
